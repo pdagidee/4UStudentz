@@ -25,6 +25,7 @@ class DisplayPage{
         registerPage: document.getElementById('register-page'),
         passwordresetPage: document.getElementById('forgot-password-page'),
         mainmenuPage: document.getElementById("main-menu"),
+        cybersecurityinfoPage: document.getElementById("cybersecurity-page"),
     });
 
     // Show the front page by default
@@ -62,6 +63,10 @@ function showPasswordResetPage(){
 
 function showMainMenuPage(){
     displayPage.showPage('mainmenuPage');
+}
+
+function showCybSecInfoPage(){
+    displayPage.showPage('cybersecurityinfoPage');
 }
 /* ----------------------------------------------------------------------------------------------------------*/
 // Creating a function for exiting the SPA

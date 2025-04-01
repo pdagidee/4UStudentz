@@ -13,7 +13,7 @@
 <body>
 
 <div id="front-page" class="front-page-class">
-<h1 id="header"> Welcome, User</h1>
+<h1 id="front-page-header" class="all-headers"> Welcome, User</h1>
 <img src="https://raw.githubusercontent.com/pdagidee/4UStudentz/refs/heads/main/2profilepicture.png" 
 alt="WelcomeUserIcon" 
 id="user-icon">
@@ -24,11 +24,11 @@ id="user-icon">
 </div>
 
 <div id="exit-page" class="exit-page-class">
-<h1 id="header"> Au Revoir? Leaving so soon?</h1>
+<h1 id="exit-page-header" class="all-headers"> Au Revoir? Leaving so soon?</h1>
 <img src="https://raw.githubusercontent.com/pdagidee/4UStudentz/refs/heads/main/images.jpeg"
 alt="Side-Eye-Goodbye"
 id="goodbye-side-eye">
-<p1 id="leaving-plea">Are you sure you want to go?</p1>
+<p1 id="leaving-plea" class="ui-text-style">Are you sure you want to go?</p1>
 <div class="exit-button-container">
 <button onclick="quitSPA()" id="yes-exit-button" class="exit-button button-style">Yes</button>
 <button onclick="showFrontPage()" id="no-exit-button" class="exit-button button-style">No</button>
@@ -37,20 +37,20 @@ id="goodbye-side-eye">
 
 <div id="login-page" class="login-page-class">
      
-     <h1 id="login-page-header"> Welcome Back, <a id="user-name">User</a></h1>
+     <h1 id="login-page-header" class="all-headers"> Welcome Back, <a id="user-name">User</a></h1>
      <div id="login-page-uname">
-          <label for="username">Username:</label>
+          <label for="username" class="ui-text-style">Username:</label>
           <input type="text" id="username" autocomplete="on">
      </div>
      <br><br>
      <div id="login-page-password">
-          <label for="pwd">Password:</label>
+          <label for="pwd" class="ui-text-style">Password:</label>
           <input type="password" id="pwd" class="completable" autocomplete="off"> <button onclick="showPassword(this)" class="pwd-revl eye-button"><i class='fas fa-eye'></i></button>
      </div>
      <button id="login-button2" class="button-style">Enter</button>
      <br><br>
-     <a id="forgot-pwd-link" onclick="showPasswordResetPage()"> Forgot Password? </a>
-     <a id="sign-up-link" onclick="showRegisterPage()"> Don't have an account? Sign up</a>
+     <a onclick="showPasswordResetPage()" id="forgot-pwd-link" class="ui-text-style clickable-link" > Forgot Password? </a>
+     <a  onclick="showRegisterPage()" id="sign-up-link" class="ui-text-style clickable-link"> Don't have an account? Sign up</a>
      <br>
      <button onclick="showFrontPage()" id="cancel1" class="button-style">Cancel</button>
 
@@ -59,24 +59,24 @@ id="goodbye-side-eye">
 </div>
 
 <div id="register-page" class="sign-up-page-class">
-     <h1 id="sign-in-page-header"> Create An Account</h1>
+     <h1 id="sign-in-page-header" class="all-headers"> Create An Account</h1>
      <div id="sign-in-uname">
           <span title= "Don't use your real name"><i class="fas fa-exclamation-circle"></i></span>
-          <label for="username2">Username:</label>
+          <label for="username2" class="ui-text-style">Username:</label>
           <input type="text" id="username2" class="completable" autocomplete="on"> 
           
      </div>
      <br><br>
      <div id="sign-in-password">
           <span title="Input a string of characters inlcuding letters, numbers and symbols"><i class="fas fa-exclamation-circle"></i></span>
-          <label for="pwd2">Password:</label>
+          <label for="pwd2" class="ui-text-style">Password:</label>
           <input type="password" id="pwd2" autocomplete="off" class="completable" > <button onclick="showPassword(this)" class="pwd-revl"><i class='fas fa-eye'></i></button> 
           
      </div>
      <br><br>
      <p1> <span title="This will be your secret question"><i class="fas fa-exclamation-circle"></i></i></span> Please answer the following question:</p1>
      <div id="secret-question-pwd">
-          <label for="sq">What is your mom's maiden name: </label>
+          <label for="sq" class="ui-text-style">What is your mom's maiden name: </label>
           <input type="text" id="sq" class="completable" autocomplete="off"> 
      </div>
      <br><br>
@@ -86,15 +86,15 @@ id="goodbye-side-eye">
 </div>
 
 <div id="forgot-password-page" class="forgot-password-class">
-     <h1>Reset Your Password</h1>
-     <p1>Before you can reset your password, we need verification of who you are...</p1>
+     <h1 class="all-headers">Reset Your Password</h1>
+     <p1 class="ui-text-style">Before you can reset your password, we need verification of who you are...</p1>
      <div id="uname-veritas">
-          <label for="forgot-uname" autocomplete="on"> Username: </label>
+          <label for="forgot-uname" autocomplete="on" class="ui-text-style"> Username: </label>
           <input type="text" id="forgot-uname" class="completable"> 
      </div>
      <br><br>
      <div id="sq-veritas">
-          <label for="forgot-answer" autocomplete="off"> Secret Question Answer: </label>
+          <label for="forgot-answer" autocomplete="off" class="ui-text-style"> Secret Question Answer: </label>
           <input type="text" id="forgot-answer" class="completable">
      </div>
      <br>
@@ -102,7 +102,7 @@ id="goodbye-side-eye">
      <br>
      <div id="password-reset-section" style="display:none">
           <br><br>
-        <label for="new-password">New Password:</label>
+        <label for="new-password" class="ui-text-style">New Password:</label>
         <input type="password" id="new-password" class="completable"> 
         <button onclick="showPassword(this)" class="pwd-revl eye-button"><i class='fas fa-eye'></i></button>
         <br><br>
@@ -116,11 +116,11 @@ id="goodbye-side-eye">
 <div id="main-menu" class="main-menu-class">
      <h1 id="main-menu-header" class="ui-text-style">Main Menu</h1>
      <div class="main-menu-elements">
-          <button id="view-passwords" class="button-style">View Passwords</button>
+          <button id="view-passwords" class="button-style main-menu-buttons">View Passwords</button>
           <br>
-          <button id="cyber-info-button" class="button-style">Cybersecurity Information</button>
+          <button onclick="showCybSecInfoPage()" id="cyber-info-button" class="button-style main-menu-buttons">Cybersecurity Information</button>
           <br>
-          <button onclick="logoutUser()" id="logout-button" class="button-style">Logout</button>
+          <button onclick="logoutUser()" id="logout-button" class="button-style main-menu-buttons">Logout</button>
 
 
      </div>
@@ -131,13 +131,46 @@ id="goodbye-side-eye">
 <!-- The following div is for the cybersecurity information page-->
 <div id="cybersecurity-page" class="cybersec-page">
      <div id="cyb-sec-header-section" class="csh">
-          <i class='fas fa-skull-crossbones'></i> <h1 id="cyb-sec-head" class="headers"> Cyber Attacks are on the rise </h1> <i class='fas fa-skull-crossbones'></i>
-          <h2 id="menu-csh" class="menu2"> Menu </h2>
+          <div id="start" class="cyb-sec-head1">
+               <button onclick="showMainMenuPage()" id="main-menu-cyb-sec" class="arrow-button">
+                    <i class='fas fa-arrow-circle-left' style="font-size: 30px;" title="Back to main menu"></i>
+               </button>
+          </div>
+          <div id="center" class="cyb-sec-head2">
+               <i class='fas fa-skull-crossbones' style="font-size: 30px;"></i> <h1 id="warning" class="warning-cyb ui-text-style"> Cyber Attacks Are On The Rise </h1> <i class='fas fa-skull-crossbones' style="font-size: 30px;"></i>
+          </div>
+          <div id="end" class="cyb-sec-head3">
+               <i class='fas fa-user-circle' style="font-size: 30px"></i>
+          </div>
      </div>
-
-
-
+     <div id="cyb-sec-info-section" class="csis">
+          <h1 id="csis-header1" class="csis-headers ui-text-style"> You are a target! <i class='fas fa-frown' style='font-size:25px'></i></h1>
+          <p id="csis-header1-info" class="csis-header-info ui-text-style"> Did you know that university students are attractive targets for cyber-attacks? </p>
+          <h2 id="csis-header2" class="csis-headers ui-text-style"> Why you are a target <i class='fas fa-exclamation-triangle' style="font-size:25px;"></i></h2>
+          <p id="csis-header2-info" class="csis-header-info ui-text-style"> 
+               <ul>
+                    <li><b>Lack of Awareness</b>: While students may be aware of cybercrime, they are not educated enough on the severity of cyberattacks, the variety of ways in which they can occur (e.g phishing) and how to prevent them.</li>
+                    <li><b>High Internet Usage</b>: Students spend lots of time online, across different platforms (university websites, social media, etc), which cybercriminals will take advantage of.</li>
+                    <li><b>Access to Valuable Data</b>: Through students, sensitive information from university databases can be uncovered. This includes banking details, addresses, etc. </li>
+               </ul>
+          </p>
+          <h3 id="csis-header3" class="csis-headers ui-text-style"> Common cyber-attacks <i class='fas fa-desktop' style='font-size:25px'></i></h3>
+          <p id="csis-header3-info" class="csis-header-info ui-text-style">
+               <ul>
+                    <li><b>Phishing</b>: Phishing is when criminals use scam messages to trick people into sending sensitive information, pay money, or click on a link which contains a virus or takes you to a fraudulent website.
+                         Phishing may happen by various means, most commonly by email, text (smishing) or voice call (vishing). Most phishing attackers send high numbers of messages and expect success in relatively few cases.</li>
+                         <br>
+                    <li><b>Trojan Horses</b>: With Trojan Horses, a malware that typically gets hidden as an attachment in an email or a free-to-download file, then transfers onto the user’s device. 
+                         Once downloaded, the malicious code will execute the task the attacker designed it for, such as gain backdoor access to corporate systems, spy on users’ online activity, or steal sensitive data.</li>
+                         <br>
+                    <li><b>Ransomware</b>: Ransomware a type of malware which prevents you from accessing your device and the data stored on it, usually by encrypting your files. 
+                         A criminal group will then demand a ransom in exchange for decryption.</li>
+               </ul>
+          </p>
+     </div>
 </div>
+
+<!-- The following div is for the actual password manager page-->
 
 <script src="app.js"></script>
 </body>
