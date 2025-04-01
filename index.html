@@ -12,17 +12,23 @@
 </head>
 <body>
 
+<!-- The following div is for the front page-->
 <div id="front-page" class="front-page-class">
-<h1 id="front-page-header" class="all-headers"> Welcome, User</h1>
-<img src="https://raw.githubusercontent.com/pdagidee/4UStudentz/refs/heads/main/2profilepicture.png" 
-alt="WelcomeUserIcon" 
-id="user-icon">
-<div class="front-page-button-container">
-<button onclick="showLoginPage()" id="login-button"  class="front-page-button button-style">Login</button>
-<button onclick="showExitPage()" id="exit-button" class="front-page-button button-style">Exit</button>
-</div>
+     <div id="front-page-header">
+          <h1 id="front-page-header1" class="all-headers"> Welcome, User</h1>
+     </div>
+     <div id="front-page-content" class="front-page-content">
+          <img src="https://raw.githubusercontent.com/pdagidee/4UStudentz/refs/heads/main/2profilepicture.png" 
+          alt="WelcomeUserIcon" 
+          id="user-icon">
+          <div class="front-page-button-container">
+               <button onclick="showLoginPage()" id="login-button"  class="front-page-button button-style">Login</button>
+               <button onclick="showExitPage()" id="exit-button" class="front-page-button button-style">Exit</button>
+          </div>
+     </div>
 </div>
 
+<!-- The following div is for the exit page -->
 <div id="exit-page" class="exit-page-class">
 <h1 id="exit-page-header" class="all-headers"> Au Revoir? Leaving so soon?</h1>
 <img src="https://raw.githubusercontent.com/pdagidee/4UStudentz/refs/heads/main/images.jpeg"
@@ -35,93 +41,110 @@ id="goodbye-side-eye">
 </div>
 </div>
 
+<!-- The following div is for the login page-->
 <div id="login-page" class="login-page-class">
-     
-     <h1 id="login-page-header" class="all-headers"> Welcome Back, <a id="user-name">User</a></h1>
+     <div class="login-header">
+          <h1 id="login-page-header" class="all-headers"> Welcome Back, <a id="user-name">User</a></h1>
+     </div>
+     <div class="login-page-content">
      <div id="login-page-uname">
           <label for="username" class="ui-text-style">Username:</label>
           <input type="text" id="username" autocomplete="on">
      </div>
-     <br><br>
      <div id="login-page-password">
           <label for="pwd" class="ui-text-style">Password:</label>
           <input type="password" id="pwd" class="completable" autocomplete="off"> <button onclick="showPassword(this)" class="pwd-revl eye-button"><i class='fas fa-eye'></i></button>
      </div>
-     <button id="login-button2" class="button-style">Enter</button>
-     <br><br>
-     <a onclick="showPasswordResetPage()" id="forgot-pwd-link" class="ui-text-style clickable-link" > Forgot Password? </a>
-     <a  onclick="showRegisterPage()" id="sign-up-link" class="ui-text-style clickable-link"> Don't have an account? Sign up</a>
-     <br>
-     <button onclick="showFrontPage()" id="cancel1" class="button-style">Cancel</button>
-
+     <div class="extra-login-buttons">
+          <button id="login-button2" class="button-style">Enter</button>
+          <a onclick="showPasswordResetPage()" id="forgot-pwd-link" class="ui-text-style clickable-link" > Forgot Password? </a>
+          <a onclick="showRegisterPage()" id="sign-up-link" class="ui-text-style clickable-link"> Don't have an account? Sign up</a>
+          <button onclick="showFrontPage()" id="cancel1" class="button-style">Cancel</button>
+     </div>
+</div>
 
 
 </div>
 
+<!-- The following div is for the registration page -->
 <div id="register-page" class="sign-up-page-class">
-     <h1 id="sign-in-page-header" class="all-headers"> Create An Account</h1>
+     <div class="register-page-header">
+     <h1 id="sign-in-page-header" class="all-headers"> Create An Account</h1> 
+     </div>
+     <div id="sign-in-content">
      <div id="sign-in-uname">
           <span title= "Don't use your real name"><i class="fas fa-exclamation-circle"></i></span>
           <label for="username2" class="ui-text-style">Username:</label>
           <input type="text" id="username2" class="completable" autocomplete="on"> 
           
      </div>
-     <br><br>
      <div id="sign-in-password">
           <span title="Input a string of characters inlcuding letters, numbers and symbols"><i class="fas fa-exclamation-circle"></i></span>
           <label for="pwd2" class="ui-text-style">Password:</label>
           <input type="password" id="pwd2" autocomplete="off" class="completable" > <button onclick="showPassword(this)" class="pwd-revl"><i class='fas fa-eye'></i></button> 
           
      </div>
-     <br><br>
+     <div class="secret-question">
      <p1> <span title="This will be your secret question"><i class="fas fa-exclamation-circle"></i></i></span> Please answer the following question:</p1>
      <div id="secret-question-pwd">
           <label for="sq" class="ui-text-style">What is your mom's maiden name: </label>
           <input type="text" id="sq" class="completable" autocomplete="off"> 
      </div>
-     <br><br>
-     <button id="sign-in-button" class="button-style">Register</button>
-     <br>
-     <button onclick="showFrontPage()" id="cancel2" class="button-style">Cancel</button>
+     </div>
+     <div id="extra-sign-in-buttons">
+          <button id="sign-in-button" class="button-style">Register</button>
+          <button onclick="showFrontPage()" id="cancel2" class="button-style">Cancel</button>
+     </div>
+     </div>
 </div>
 
+<!-- The following div is for the password reset page-->
 <div id="forgot-password-page" class="forgot-password-class">
-     <h1 class="all-headers">Reset Your Password</h1>
-     <p1 class="ui-text-style">Before you can reset your password, we need verification of who you are...</p1>
-     <div id="uname-veritas">
-          <label for="forgot-uname" autocomplete="on" class="ui-text-style"> Username: </label>
-          <input type="text" id="forgot-uname" class="completable"> 
+     <div class="fpp-header">
+          <h1 class="all-headers">Reset Your Password</h1>
      </div>
-     <br><br>
-     <div id="sq-veritas">
-          <label for="forgot-answer" autocomplete="off" class="ui-text-style"> Secret Question Answer: </label>
-          <input type="text" id="forgot-answer" class="completable">
+     <div class="fpp-content1">
+          <p1 class="ui-text-style">Before you can reset your password, we need verification of who you are...</p1>
+          <div id="uname-veritas">
+               <label for="forgot-uname" class="ui-text-style"> Username: </label>
+               <input type="text" id="forgot-uname" class="completable" autocomplete="on"> 
+          </div>
+          <div id="sq-veritas">
+               <label for="forgot-answer" class="ui-text-style"> Secret Question Answer: </label>
+               <input type="text" id="forgot-answer" class="completable" autocomplete="off">
+               <button id="veritas-button" class="button-style">Verify</button>
+          </div>
      </div>
-     <br>
-     <button id="veritas-button" class="button-style">Verify Answer</button>
-     <br>
      <div id="password-reset-section" style="display:none">
-          <br><br>
-        <label for="new-password" class="ui-text-style">New Password:</label>
-        <input type="password" id="new-password" class="completable"> 
-        <button onclick="showPassword(this)" class="pwd-revl eye-button"><i class='fas fa-eye'></i></button>
-        <br><br>
-        <button id="reset-password-button" class="button-style">Reset Password</button>
-    </div>
-    <br>
-    <button onclick="showLoginPage()">Cancel</button>
+          <div>
+               <label for="new-password" class="ui-text-style">New Password:</label>
+               <input type="password" id="new-password" class="completable"> 
+               <button onclick="showPassword(this)" class="pwd-revl eye-button"><i class='fas fa-eye'></i></button>
+          </div>
+          <div>
+               <button id="reset-password-button" class="button-style">Reset Password</button>
+               <button onclick="showLoginPage()" class="button-style">Cancel</button>
+          </div>
+     </div>
 </div>
 
 <!--The following div is for the main menu-->
 <div id="main-menu" class="main-menu-class">
-     <h1 id="main-menu-header" class="ui-text-style">Main Menu</h1>
+     <div id="main-menu-header">
+          <div class="header-spacer"></div>
+          <div id="main-menu-hcenter" class="main-menu-hcenter">
+               <h1 id="main-menu-head" class="all-headers">Main Menu</h1>
+          </div>
+          <div id="main-menu-hend" class="main-menu-hend">
+               <i class='fas fa-user-circle' style="font-size: 30px"></i>
+          </div>
+     </div>
      <div class="main-menu-elements">
-          <button id="view-passwords" class="button-style main-menu-buttons">View Passwords</button>
-          <br>
+          <div id="main-menu-buttons" class="menu-buttons">
+          <button onclick="showPasswordStoragePage()" id="view-passwords" class="button-style main-menu-buttons">View Passwords</button>
           <button onclick="showCybSecInfoPage()" id="cyber-info-button" class="button-style main-menu-buttons">Cybersecurity Information</button>
-          <br>
           <button onclick="logoutUser()" id="logout-button" class="button-style main-menu-buttons">Logout</button>
-
+          </div>
 
      </div>
 
@@ -137,7 +160,7 @@ id="goodbye-side-eye">
                </button>
           </div>
           <div id="center" class="cyb-sec-head2">
-               <i class='fas fa-skull-crossbones' style="font-size: 30px;"></i> <h1 id="warning" class="warning-cyb ui-text-style"> Cyber Attacks Are On The Rise </h1> <i class='fas fa-skull-crossbones' style="font-size: 30px;"></i>
+               <i class='fas fa-skull-crossbones' style="font-size: 30px;"></i> <h1 id="warning" class="warning-cyb all-headers"> Cyber Attacks Are On The Rise </h1> <i class='fas fa-skull-crossbones' style="font-size: 30px;"></i>
           </div>
           <div id="end" class="cyb-sec-head3">
                <i class='fas fa-user-circle' style="font-size: 30px"></i>
@@ -171,7 +194,89 @@ id="goodbye-side-eye">
 </div>
 
 <!-- The following div is for the actual password manager page-->
-
+<div id="password-storage-page" class="page-container" style="display: none; flex-direction: column;">
+     <h2>Your Passwords</h2>
+     
+     <div class="search-container">
+         <input type="text" id="search-passwords" placeholder="Search passwords...">
+         <button class="button-style" onclick="searchPasswords()">Search</button>
+     </div>
+     
+     <div class="add-password-container">
+         <button class="button-style" onclick="document.getElementById('add-password-form').style.display = 'block'">
+             <i class="fas fa-plus"></i> Add New Password
+         </button>
+     </div>
+     
+     <div id="add-password-form" class="modal-form" style="display: none;">
+         <h3 class="all-headers">Add New Password</h3>
+         <div class="form-group">
+             <label for="new-website" class="ui-text-style">Website/App:</label>
+             <input type="text" id="new-website" required>
+         </div>
+         <div class="form-group">
+             <label for="new-username" ui-text-style="ui-text-style">Username/Email:</label>
+             <input type="text" id="new-username" required>
+         </div>
+         <div class="form-group">
+             <label for="new-password-value" class="ui-text-style">Password:</label>
+             <div class="password-field">
+                 <input type="password" id="new-password-value" required>
+                 <button type="button" class="eye-button" onclick="showPassword(this)">
+                     <i class="fas fa-eye"></i>
+                 </button>
+             </div>
+             <button type="button" class="button-style"onclick="generatePassword('new-password-value')">Generate Password</button>
+         </div>
+         <div class="form-group">
+             <label for="new-notes" class="ui-text-style">Notes:</label>
+             <textarea id="new-notes"></textarea>
+         </div>
+         <div class="form-actions">
+             <button type="button" onclick="addNewPassword()" class="button-style">Save</button>
+             <button type="button" class="button-style" onclick="document.getElementById('add-password-form').style.display = 'none'">Cancel</button>
+         </div>
+     </div>
+     
+     <div id="edit-password-form" class="modal-form" style="display: none;">
+         <h3>Edit Password</h3>
+         <input type="hidden" id="edit-id">
+         <div class="form-group">
+             <label for="edit-website" class="ui-text-style">Website/App:</label>
+             <input type="text" id="edit-website" required>
+         </div>
+         <div class="form-group">
+             <label for="edit-username" class="ui-text-style">Username/Email:</label>
+             <input type="text" id="edit-username" required>
+         </div>
+         <div class="form-group">
+             <label for="edit-password-value" class="ui-text-style">Password:</label>
+             <div class="password-field">
+                 <input type="password" id="edit-password-value" required>
+                 <button type="button"class="eye-button" onclick="showPassword(this)">
+                     <i class="fas fa-eye"></i>
+                 </button>
+             </div>
+             <button type="button" class="edit-button" onclick="generatePassword('edit-password-value')">Generate Password</button>
+         </div>
+         <div class="form-group">
+             <label for="edit-notes" class="ui-text-style">Notes:</label>
+             <textarea id="edit-notes"></textarea>
+         </div>
+         <div class="form-actions">
+             <button type="button" class="button-style" onclick="saveEditedPassword()">Save</button>
+             <button type="button" class="button-style" onclick="document.getElementById('edit-password-form').style.display = 'none'">Cancel</button>
+         </div>
+     </div>
+     
+     <div id="passwords-list" class="passwords-list">
+         <!-- Passwords will be dynamically inserted here -->
+     </div>
+     
+     <div class="back-button-container">
+         <button class="button-style" onclick="showMainMenuPage()">Back to Main Menu</button>
+     </div>
+ </div>
 <script src="app.js"></script>
 </body>
 

@@ -237,7 +237,7 @@ document.getElementById("login-button2").addEventListener("click", async() => {
     let success = await user.login();
 
     if (success){
-        document.getElementById("header").innerText = `Welcome, ${username}`;
+        document.getElementById("front-page-header").innerText = `Welcome, ${username}`;
         document.getElementById("user-name").innetText = username;
         showMainMenuPage();
     }
@@ -300,7 +300,7 @@ document.getElementById("reset-password-button").addEventListener("click", async
 window.addEventListener("DOMContentLoaded", () => {
     const loggedInUser = sessionStorage.getItem("loggedInUser");
     if(loggedInUser) {
-        document.getElementById("header").innerText = `Welcome, ${loggedInUser}`;
+        document.getElementById("front-page-header").innerText = `Welcome, ${loggedInUser}`;
         document.getElementById("user-name").innerText = loggedInUser;
         showMainMenuPage();
     }
@@ -312,8 +312,471 @@ function logoutUser(){
     
     UserAccount.logout();
 
-    document.getElementById("header").innerText = "Welcome User";
+    document.getElementById("front-page-header").innerText = "Welcome User";
     document.getElementById("user-name").innerText = "User";
 
     showFrontPage();
+}
+
+/* Password Storage */
+
+//Password Entry class
+class PasswordEntry{
+    constructor(id, website, username, password, notes =""){
+        this.id = id;
+        this.website = website;
+        this.username = username;
+        this.password = password;
+        this.notes = notes;
+        this.dateCreated = new Date().toISOString();
+        this.dateModified = new Date().toISOString();
+    }
+}
+
+class PasswordManager{
+    constructor(masterKey) {
+        this.masterKey = masterKey;
+        this.passwords = [];
+    }
+
+    
+    static generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    // Encryption useing AES-256
+    async encrypt(data){
+        const encoder = new TextEncoder();
+        const salt = UserAccount.generateSalt();
+
+        // Deriving a key from master key
+        const keyMaterial = await crypto.subtle.importKey(
+            "raw",
+            encoder.encode(this.masterKey),
+            { name: "PBKDF2" },
+            false,
+            ["deriveKey"]
+        );
+
+        const cryptoKey = await crypto.subtle.deriveKey(
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: 100000,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-CBC", length: 256},
+        false,
+        ["encrypt"]
+        );
+
+
+        const iv = crypto.getRandomValues(new Uint8Array(16));
+
+        // Encryption of data
+        const encryptedContent = await crypto.subtle.encrypt(
+            { name: "AES-CBC", iv: iv},
+            cryptoKey,
+            encoder.encode(JSON.stringify(data))
+
+        );
+
+        return {
+            encryptedData: UserAccount.arrayBufferToBase64(encryptedContent),
+            iv: UserAccount.arrayBufferToBase64(iv),
+            salt: UserAccount.arrayBufferToBase64(salt)
+        };
+    }
+
+    // Decryption using AES-256
+    async decrypt(encryptedObj){
+        const encoder = new TextEncoder();
+
+    const encryptedData = UserAccount.base64ToArrayBuffer(encryptedObj.encryptedData);
+    const iv = UserAccount.base64ToArrayBuffer(encryptedObj.iv);
+    const salt = UserAccount.base64ToArrayBuffer(encryptedObj.salt);
+
+    // Derive same key used for encryption
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw",
+        encoder.encode(this.masterKey),
+        { name: "PBKDF2" },
+        false,
+        ["deriveKey"]
+    );
+
+    const cryptoKey = await crypto.subtle.deriveKey(
+
+        {
+            name: "PBKDF2",
+            salt: salt,
+            iterations: 100000,
+            hash: "SHA-256"
+        },
+        keyMaterial,
+        { name: "AES-CBC", length: 256},
+        false,
+        ["decrypt"]
+    );
+
+    const decryptedContent = await crypto.subtle.decrypt(
+        { name: "AES-CBC", iv: iv },
+        cryptoKey,
+        encryptedData
+    );
+
+    return JSON.parse(new TextDecoder().decode(decryptedContent));
+    }
+
+    // Loading passwords method
+    async loadPasswords() {
+        const username = sessionStorage.getItem("loggedInUser");
+        if(!username) return false;
+
+        const passwordsKey = `${username}_passwords`;
+        const encryptedData = localStorage.getItem(passwordsKey);
+
+        if(!encryptedData){
+            this.passwords = [];
+            return true;
+        }
+
+        try{
+            this.passwords = await this.decrypt(JSON.parse(encryptedData));
+            return true;
+        } catch (error){
+            console.error("Failed to decrypt passwords:", error);
+            return false;
+        }
+    }
+
+    // Save passwords to localStorage
+    async savePasswords(){
+        const username = sessionStorage.getItem("loggedInUser");
+        if(!username) return false;
+
+        const passwordsKey = `${username}_passwords`;
+        const encryptedData = await this.encrypt(this.passwords);
+
+        localStorage.setItem(passwordsKey, JSON.stringify(encryptedData));
+        return true;
+    }
+
+    // Add a new password method
+    async addPassword(website, username, password, notes =""){
+        const newEntry = new PasswordEntry(
+            PasswordManager.generateId(),
+            website,
+            username,
+            password,
+            notes
+        );
+
+        this.passwords.push(newEntry);
+        await this.savePasswords();
+        return newEntry;
+    }
+
+    getPasswordById(id) {
+        return this.passwords.find(entry => entry.id === id);
+    }
+
+    getAllPasswords(){
+        return this.passwords;
+    }
+
+    //Update Password method
+    async updatePassword(id, updates){
+        const index = this.passwords.findIndex(entry => entry.id === id);
+        if (index === - 1) return false;
+
+        this.passwords[index] = {
+            ...this.passwords[index],
+            ...updates,
+            dateModified: new Date().toISOString()
+        };
+
+        await this.savePasswords();
+        return true;
+    }
+
+    // Delete Password  method
+
+    async deletePassword(id) {
+        const initialLength = this.passwords.length;
+        this.passwords = this.passwords.filter(entry => entry.id !== id);
+
+        if(this.passwords.length < initalLength){
+            await this.savePasswords();
+            return true;
+        }
+
+        return false;
+    }
+
+    // Search for Passwords
+    searchPasswords(query){
+        query = query.toLowerCase();
+        return this.passwords.filter(entry =>
+            entry.website.toLowerCase().includes(query) ||
+            entry.username.toLowerCase().includes(query) ||
+            entry.notes.toLowerCase().includes(query)
+        );
+    }
+}
+
+let passwordManager;
+
+// Add the password storage page to your DisplayPage class
+document.addEventListener('DOMContentLoaded', () => {
+    if (displayPage && document.getElementById('password-storage-page')) {
+        displayPage.pages.passwordStoragePage = document.getElementById('password-storage-page');
+    }
+});
+
+// Function to show the password storage page
+function showPasswordStoragePage() {
+    if (UserAccount.isLoggedIn()) {
+        displayPage.showPage('passwordStoragePage');
+        loadAndDisplayPasswords();
+    } else {
+        alert("Please log in to access your passwords.");
+        showLoginPage();
+    }
+}
+
+// Initialize the password manager after successful login
+document.getElementById("login-button2").addEventListener("click", async () => {
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("pwd").value;
+
+    let user = new UserAccount(username, password);
+    let success = await user.login();
+
+    if (success) {
+        document.getElementById("front-page-header").innerText = `Welcome, ${username}`;
+        document.getElementById("user-name").innerText = username;
+        
+        // Initialize password manager with user's password as master key
+        passwordManager = new PasswordManager(password);
+        await passwordManager.loadPasswords();
+        
+        showMainMenuPage();
+    }
+});
+
+// Load and display passwords
+async function loadAndDisplayPasswords() {
+    if (!passwordManager) {
+        const password = prompt("Please enter your password to decrypt your passwords:");
+        passwordManager = new PasswordManager(password);
+        const success = await passwordManager.loadPasswords();
+        
+        if (!success) {
+            alert("Failed to decrypt passwords. Please try again.");
+            return;
+        }
+    }
+    
+    const passwordsList = document.getElementById("passwords-list");
+    passwordsList.innerHTML = "";
+    
+    const passwords = passwordManager.getAllPasswords();
+    
+    if (passwords.length === 0) {
+        passwordsList.innerHTML = "<p>No passwords stored yet.</p>";
+        return;
+    }
+    
+    passwords.forEach(entry => {
+        const entryElement = document.createElement("div");
+        entryElement.className = "password-entry";
+        entryElement.dataset.id = entry.id;
+        
+        entryElement.innerHTML = `
+            <div class="entry-header">
+                <h3 class="ui-text-style all-headers">${entry.website}</h3>
+                <div class="entry-actions">
+                    <button class="view-btn eye-button" onclick="viewPassword('${entry.id}')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="edit-btn edit-button" onclick="editPassword('${entry.id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="delete-btn delete-button" onclick="deletePassword('${entry.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <p class="ui-text-style"><strong>Username:</strong> ${entry.username}</p>
+            <p class="ui-text-style"><strong>Password:</strong> ********</p>
+            ${entry.notes ? `<p><strong>Notes:</strong> ${entry.notes}</p>` : ''}
+            <p class="entry-date ui-text-style">Last modified: ${new Date(entry.dateModified).toLocaleString()}</p>
+        `;
+        
+        passwordsList.appendChild(entryElement);
+    });
+}
+
+// Add a new password
+async function addNewPassword() {
+    const website = document.getElementById("new-website").value;
+    const username = document.getElementById("new-username").value;
+    const password = document.getElementById("new-password-value").value;
+    const notes = document.getElementById("new-notes").value;
+    
+    if (!website || !username || !password) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+    
+    await passwordManager.addPassword(website, username, password, notes);
+    
+    // Clear the form
+    document.getElementById("new-website").value = "";
+    document.getElementById("new-username").value = "";
+    document.getElementById("new-password-value").value = "";
+    document.getElementById("new-notes").value = "";
+    
+    // Hide the form
+    document.getElementById("add-password-form").style.display = "none";
+    
+    // Reload the passwords
+    loadAndDisplayPasswords();
+}
+
+// View password
+function viewPassword(id) {
+    const entry = passwordManager.getPasswordById(id);
+    if (!entry) return;
+    
+    // Find the password element for this entry
+    const entryElement = document.querySelector(`.password-entry[data-id="${id}"]`);
+    const passwordElement = entryElement.querySelector("p:nth-child(3)");
+    
+    // Toggle password visibility
+    if (passwordElement.innerHTML.includes("********")) {
+        passwordElement.innerHTML = `<strong>Password:</strong> ${entry.password}`;
+        // Change the eye icon
+        entryElement.querySelector(".view-btn i").classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+        passwordElement.innerHTML = `<strong>Password:</strong> ********`;
+        // Change the eye icon back
+        entryElement.querySelector(".view-btn i").classList.replace("fa-eye-slash", "fa-eye");
+    }
+}
+
+// Edit password
+function editPassword(id) {
+    const entry = passwordManager.getPasswordById(id);
+    if (!entry) return;
+    
+    // Fill the edit form with the entry data
+    document.getElementById("edit-id").value = entry.id;
+    document.getElementById("edit-website").value = entry.website;
+    document.getElementById("edit-username").value = entry.username;
+    document.getElementById("edit-password-value").value = entry.password;
+    document.getElementById("edit-notes").value = entry.notes || "";
+    
+    // Show the edit form
+    document.getElementById("edit-password-form").style.display = "block";
+}
+
+// Save edited password
+async function saveEditedPassword() {
+    const id = document.getElementById("edit-id").value;
+    const website = document.getElementById("edit-website").value;
+    const username = document.getElementById("edit-username").value;
+    const password = document.getElementById("edit-password-value").value;
+    const notes = document.getElementById("edit-notes").value;
+    
+    if (!website || !username || !password) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+    
+    await passwordManager.updatePassword(id, { website, username, password, notes });
+    
+    // Hide the form
+    document.getElementById("edit-password-form").style.display = "none";
+    
+    // Reload the passwords
+    loadAndDisplayPasswords();
+}
+
+// Delete password
+async function deletePassword(id) {
+    if (confirm("Are you sure you want to delete this password?")) {
+        await passwordManager.deletePassword(id);
+        loadAndDisplayPasswords();
+    }
+}
+
+// Search passwords
+function searchPasswords() {
+    const query = document.getElementById("search-passwords").value;
+    
+    if (!query) {
+        loadAndDisplayPasswords();
+        return;
+    }
+    
+    const results = passwordManager.searchPasswords(query);
+    
+    const passwordsList = document.getElementById("passwords-list");
+    passwordsList.innerHTML = "";
+    
+    if (results.length === 0) {
+        passwordsList.innerHTML = "<p>No matching passwords found.</p>";
+        return;
+    }
+    
+    results.forEach(entry => {
+        const entryElement = document.createElement("div");
+        entryElement.className = "password-entry";
+        entryElement.dataset.id = entry.id;
+        
+        entryElement.innerHTML = `
+            <div class="entry-header">
+                <h3 class="ui-text-style all-headers">${entry.website}</h3>
+                <div class="entry-actions">
+                    <button class="view-btn eye-button" onclick="viewPassword('${entry.id}')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="edit-btn edit-button" onclick="editPassword('${entry.id}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="delete-btn delete-button" onclick="deletePassword('${entry.id}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <p class="ui-text-style"><strong>Username:</strong> ${entry.username}</p>
+            <p class="ui-text-style"><strong>Password:</strong> ********</p>
+            ${entry.notes ? `<p><strong>Notes:</strong> ${entry.notes}</p>` : ''}
+            <p class="entry-date ui-text-style">Last modified: ${new Date(entry.dateModified).toLocaleString()}</p>
+        `;
+        
+        passwordsList.appendChild(entryElement);
+    });
+}
+
+// Generate a random password
+function generateRandomPassword(length = 8) {
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]\\:;?><,./-=";
+    let password = "";
+    
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+    }
+    
+    return password;
+}
+
+// Generate password button event handler
+function generatePassword(targetId) {
+    const password = generateRandomPassword();
+    document.getElementById(targetId).value = password;
 }

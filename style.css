@@ -10,33 +10,90 @@ html{
     padding: 30px;
 }
 
-#user-icon{
-    display: block;
-    margin: auto;
-    width: 100px;
-    height: 100px;
-    padding: 30px;
+.all-headers{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 30px;
+}
+
+.button-style {
+    background-color: #020013;
+    border: 2px solid #04010a;
+    border-radius: 5px;
+    font-weight: bold;
+    color: white;
+    transition: background-color 0.3s;
+    cursor: pointer;
+}
+/* For Front Page */
+#front-page-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px; 
+    border-bottom: solid 2px black; 
+    background-color: white; 
+    padding: 0 20px; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+
+#front-page-header1 {
+    margin: 0;
+    text-align: center;
 }
 
 #front-page {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    margin-top: 80px; 
+    padding-top: 60px;
 }
 
-.front-page-button-container{
+.front-page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    max-width: 600px;
+    padding: 20px;
+    margin: 0 auto;
+    background-color: #f8f8f8; 
+    border: 2px solid #ccc; 
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#user-icon {
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 20px auto;
+    padding: 0; 
+}
+
+.front-page-button-container {
     display: flex;
     flex-direction: row;
     gap: 2rem;
     justify-content: center;
-    margin-top: 20px;
-
+    margin-top: 30px;
+    width: 100%;
 }
 
 .front-page-button {
     padding: 15px 30px;
     cursor: pointer;
+    min-width: 120px; 
+    text-align: center;
 }
+
+/* For the exit page*/
 
 #exit-page{
     display: flex;
@@ -78,56 +135,387 @@ html{
     cursor: pointer;
 }
 
-#login-page{
+/* For Login Page*/
+
+.login-page-class {
+    margin-top: 60px; 
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px; 
+    border-bottom: solid 2px black; 
+    background-color: white; 
+    padding: 0 20px; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.login-page-content {
+
+    display: flex; 
+    flex-direction: column;
+    width: 80%; 
+    max-width: 600px; 
+    margin: 15px auto; 
+    padding: 20px;
+    background-color: #f8f8f8; 
+    border: 2px solid #ccc; 
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    gap: 20px; 
+}
+
+#login-page-password, #login-page-uname {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#login-page-password label, #login-page-uname label {
+    min-width: 80px; 
+}
+
+#login-page-password input, #login-page-uname input {
+    flex: 1; 
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+.pwd-revl {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.extra-login-buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 15px;
+    width: 100%;
+    margin-top: 10px;
 }
 
-#login-page-password, #login-page-uname{
-    display: flex;
-    align-items: center;
-    gap: 8px;
+#login-button2 {
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
 }
 
-#register-page{
+.clickable-link {
+    color: #000102;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#cancel1 {
+    width: 100%;
+    max-width: 200px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+/*Register Page*/
+.sign-up-page-class { 
+    margin-top: 60px; 
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
 }
 
-#sign-in-uname, #sign-in-pwd{
+.register-page-header {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px; 
+    border-bottom: solid 2px black; 
+    background-color: white; 
+    padding: 0 20px; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+#sign-in-content {
+    display: flex; 
+    flex-direction: column;
+    width: 80%; 
+    max-width: 600px; 
+    margin: 15px auto; 
+    padding: 20px;
+    background-color: #f8f8f8; 
+    border: 2px solid #ccc; 
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    gap: 20px; 
+}
+
+#sign-in-uname, #sign-in-password, .secret-question { 
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.fa-exclamation-circle {
+    color: #888;
+    margin-right: 5px;
+    cursor: help;
+}
+
+.secret-question {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.secret-question p1 {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+#secret-question-pwd {
+    display: flex;
+    width: 100%;
     align-items: center;
     gap: 8px;
 }
 
-.forgot-password-class{
+#sign-in-password label, #sign-in-uname label, #secret-question-pwd label {
+    min-width: 180px; 
+}
+
+#sign-in-password input, #sign-in-uname input, #secret-question-pwd input {
+    flex: 1; 
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.pwd-revl {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
+#extra-sign-in-buttons { 
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#sign-in-button, #cancel2 {
+    min-width: 120px;
+    padding: 10px 20px;
+}
+
+/* The Password-Reset Page */
+.forgot-password-class {
+    margin-top: 60px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
 }
 
-#uname-veritas, #sq-veritas, #password-reset-section{
+.fpp-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px; 
+    border-bottom: solid 2px black; 
+    background-color: white; 
+    padding: 0 20px; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.fpp-content1 {
+    display: flex; 
+    flex-direction: column;
+    width: 80%; 
+    max-width: 600px; 
+    margin: 15px auto; 
+    padding: 20px;
+    background-color: #f8f8f8; 
+    border: 2px solid #ccc; 
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    gap: 20px; 
+}
+
+.fpp-content1 p1 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#uname-veritas, #sq-veritas {
     display: flex;
     align-items: center;
     gap: 8px;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
-.eye-button{
-    border-style: none;
-    background-color: transparent;
+#uname-veritas label, #sq-veritas label {
+    min-width: 180px;
 }
 
-.button-style{
-    border-radius: 12px;
-    color:white;
-    background-color: hsl(222.2 47.4% 11.2%);
+#uname-veritas input, #sq-veritas input {
+    flex: 1; 
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
+#veritas-button {
+    padding: 8px 15px;
+    margin-left: 10px;
+}
+
+#password-reset-section {
+    display: flex; 
+    flex-direction: column;
+    width: 80%; 
+    max-width: 600px; 
+    margin: 15px auto; 
+    padding: 20px;
+    background-color: #f8f8f8; 
+    border: 2px solid #ccc; 
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    gap: 20px; 
+    align-items: center;
+}
+
+#password-reset-section label {
+    min-width: 120px;
+    margin-right: 10px;
+}
+
+#password-reset-section input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 250px;
+}
+
+#reset-password-button, #password-reset-section button:last-child {
+    padding: 10px 20px;
+    min-width: 120px;
+    margin: 5px;
+}
+
+#password-reset-section div {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+}
+
+.pwd-revl {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+}
+
+
+.button-style:hover {
+    background-color: #e8e8e8;
+}
+/* Main Menu tingz*/
+#main-menu-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px; 
+    border-bottom: solid 2px black; 
+    background-color: white; 
+    padding: 0 20px; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.main-menu-hcenter{
+    flex-grow: 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    gap: 5px;
+}
+
+.header-spacer {
+    flex: 1; 
+}
+
+.main-menu-hend{
+    flex: 1; 
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    padding-left: 20px;
+}
+
+.main-menu-class {
+    margin-top: 60px;
+    padding-top: 60px;
+}
+
+.main-menu-elements{
+    display: block; 
+    width: 80%; 
+    max-width: 600px; 
+    margin: 15px auto; 
+    padding: 20px;
+    background-color: #f8f8f8; 
+    border: 2px solid #ccc; 
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.menu-buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; /* Proper spacing between buttons */
+}
+
+.main-menu-buttons {
+    width: 50%; /* Make buttons full width */
+}
+/* For CyberSecurity Information Page */
 .csh {
     display: flex;
     justify-content: space-between;
@@ -195,4 +583,176 @@ html{
 .csis-header-info {
     font-size: 16px;
     display: block; 
+}
+
+/* For the password storage page*/
+.search-container {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.add-password-container {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.passwords-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.password-entry {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.entry-header h3 {
+    margin: 0;
+}
+
+.entry-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.entry-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.entry-actions button:hover {
+    background-color: #e0e0e0;
+}
+
+.view-btn {
+    color: #03111d;
+}
+
+.edit-btn {
+    color: #031225;
+}
+
+.delete-btn {
+    color: #020d25;
+}
+
+.entry-date {
+    font-size: 0.8em;
+    color: #777;
+    margin-top: 10px;
+}
+
+.modal-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 80%;
+    max-width: 500px;
+}
+
+.modal-form h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.password-field {
+    display: flex;
+}
+
+.password-field input {
+    flex: 1;
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.password-field button {
+    border: 1px solid #ccc;
+    border-left: none;
+    background: #f0f0f0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-actions button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-actions button:first-child {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.form-actions button:last-child {
+    background-color: #f0f0f0;
+}
+
+.back-button-container {
+    margin-top: 20px;
+    text-align: center;
 }
