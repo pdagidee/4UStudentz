@@ -9,9 +9,9 @@
      <link rel="icon" id="favicon" type="image/x-icon" 
      href="https://raw.githubusercontent.com/pdagidee/4UStudentz/refs/heads/main/Untitled%20design%20(1).png">
      <script src="https://kit.fontawesome.com/9e6e4e30dc.js" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
-
 <!-- The following div is for the front page-->
 <div id="front-page" class="front-page-class">
      <div id="front-page-header">
@@ -56,8 +56,7 @@ id="goodbye-side-eye">
           <input type="password" id="pwd" class="completable" autocomplete="off"> <button onclick="showPassword(this)" class="pwd-revl eye-button"><i class='fas fa-eye'></i></button>
      </div>
      <div class="extra-login-buttons">
-          <button id="login-button2" class="button-style">Enter</button>
-          <a onclick="showPasswordResetPage()" id="forgot-pwd-link" class="ui-text-style clickable-link" > Forgot Password? </a>
+          <button onclick="LoginUser()"id="login-button2" class="button-style">Enter</button>
           <a onclick="showRegisterPage()" id="sign-up-link" class="ui-text-style clickable-link"> Don't have an account? Sign up</a>
           <button onclick="showFrontPage()" id="cancel1" class="button-style">Cancel</button>
      </div>
@@ -84,47 +83,10 @@ id="goodbye-side-eye">
           <input type="password" id="pwd2" autocomplete="off" class="completable" > <button onclick="showPassword(this)" class="pwd-revl"><i class='fas fa-eye'></i></button> 
           
      </div>
-     <div class="secret-question">
-     <p1> <span title="This will be your secret question"><i class="fas fa-exclamation-circle"></i></i></span> Please answer the following question:</p1>
-     <div id="secret-question-pwd">
-          <label for="sq" class="ui-text-style">What is your mom's maiden name: </label>
-          <input type="text" id="sq" class="completable" autocomplete="off"> 
-     </div>
-     </div>
      <div id="extra-sign-in-buttons">
-          <button id="sign-in-button" class="button-style">Register</button>
+          <button onclick="SignInUser()" id="sign-in-button" class="button-style">Register</button>
           <button onclick="showFrontPage()" id="cancel2" class="button-style">Cancel</button>
      </div>
-     </div>
-</div>
-
-<!-- The following div is for the password reset page-->
-<div id="forgot-password-page" class="forgot-password-class">
-     <div class="fpp-header">
-          <h1 class="all-headers">Reset Your Password</h1>
-     </div>
-     <div class="fpp-content1">
-          <p1 class="ui-text-style">Before you can reset your password, we need verification of who you are...</p1>
-          <div id="uname-veritas">
-               <label for="forgot-uname" class="ui-text-style"> Username: </label>
-               <input type="text" id="forgot-uname" class="completable" autocomplete="on"> 
-          </div>
-          <div id="sq-veritas">
-               <label for="forgot-answer" class="ui-text-style"> Secret Question Answer: </label>
-               <input type="text" id="forgot-answer" class="completable" autocomplete="off">
-               <button id="veritas-button" class="button-style">Verify</button>
-          </div>
-     </div>
-     <div id="password-reset-section" style="display:none">
-          <div>
-               <label for="new-password" class="ui-text-style">New Password:</label>
-               <input type="password" id="new-password" class="completable"> 
-               <button onclick="showPassword(this)" class="pwd-revl eye-button"><i class='fas fa-eye'></i></button>
-          </div>
-          <div>
-               <button id="reset-password-button" class="button-style">Reset Password</button>
-               <button onclick="showLoginPage()" class="button-style">Cancel</button>
-          </div>
      </div>
 </div>
 
@@ -143,7 +105,7 @@ id="goodbye-side-eye">
           <div id="main-menu-buttons" class="menu-buttons">
           <button onclick="showPasswordStoragePage()" id="view-passwords" class="button-style main-menu-buttons">View Passwords</button>
           <button onclick="showCybSecInfoPage()" id="cyber-info-button" class="button-style main-menu-buttons">Cybersecurity Information</button>
-          <button onclick="logoutUser()" id="logout-button" class="button-style main-menu-buttons">Logout</button>
+          <button onclick="LogOutUser()" id="logout-button" class="button-style main-menu-buttons">Logout</button>
           </div>
 
      </div>
@@ -177,7 +139,7 @@ id="goodbye-side-eye">
                     <li><b>Access to Valuable Data</b>: Through students, sensitive information from university databases can be uncovered. This includes banking details, addresses, etc. </li>
                </ul>
           </p>
-          <h3 id="csis-header3" class="csis-headers ui-text-style"> Common cyber-attacks <i class='fas fa-desktop' style='font-size:25px'></i></h3>
+          <h3 id="csis-header3" class="csis-headers ui-text-style"> Common Cyber-Attacks <i class='fas fa-desktop' style='font-size:25px'></i></h3>
           <p id="csis-header3-info" class="csis-header-info ui-text-style">
                <ul>
                     <li><b>Phishing</b>: Phishing is when criminals use scam messages to trick people into sending sensitive information, pay money, or click on a link which contains a virus or takes you to a fraudulent website.
@@ -195,13 +157,11 @@ id="goodbye-side-eye">
 
 <!-- The following div is for the actual password manager page-->
 <div id="password-storage-page" class="page-container" style="display: none; flex-direction: column;">
-     <h2>Your Passwords</h2>
-     
-     <div class="search-container">
-         <input type="text" id="search-passwords" placeholder="Search passwords...">
-         <button class="button-style" onclick="searchPasswords()">Search</button>
+     <div id="psp-header">
+      <h2 id="psp-header-main" class="all-headers">Your Passwords</h2>    
      </div>
      
+     <div id="psp-content">
      <div class="add-password-container">
          <button class="button-style" onclick="document.getElementById('add-password-form').style.display = 'block'">
              <i class="fas fa-plus"></i> Add New Password
@@ -276,8 +236,10 @@ id="goodbye-side-eye">
      <div class="back-button-container">
          <button class="button-style" onclick="showMainMenuPage()">Back to Main Menu</button>
      </div>
+   </div>
  </div>
-<script src="app.js"></script>
+ 
+<script src="app2.js"></script>
 </body>
 
 </html>

@@ -25,7 +25,7 @@ class DisplayPage{
         registerPage: document.getElementById('register-page'),
         mainmenuPage: document.getElementById("main-menu"),
         cybersecurityinfoPage: document.getElementById("cybersecurity-page"),
-        passwordStoragePage : document.getElementById('password-storage-page'),
+        passwordstoragePage: document.getElementById("password-storage-page"),
     });
 
     // Show the front page by default
@@ -62,14 +62,17 @@ function showCybSecInfoPage(){
 }
 
 function showPasswordStoragePage(){
-    displayPage.showPage('password-storage-page');
+    if(UserAccount.CheckifUserisLoggedIn()){
+    displayPage.showPage("passwordstoragePage");
+    loadAndDisplayPasswords();
+    } else{
+        alert('Please login to access your passwords');
+        showLoginPage();
+    }
 }
 /* ----------------------------------------------------------------------------------------------------------*/
 // Creating a function for exiting the SPA
 function quitSPA(){
-
-    UserAccount.logout(); 
-
     document.body.innerHTML = "<h1 style='color:red;text-align:center;'>You have now left the SPA.</h1>"
 }
 
@@ -80,165 +83,154 @@ function showPassword(button){
     var icon = button.querySelectorAll('i');
     if (input.type === "password") {
         input.type = "text";
-        icon.forEach(i => i.classList.replace('fa-eye', 'fa-eye-slash')); 
+        icon.forEach(i => i.classList.replace('fa-eye', 'fa-eye-slash')); // Change the eye to eye slash when showing/not showing password for visual effect
     } else {
         input.type = "password";
-        icon.forEach(i => i.classList.replace('fa-eye-slash', 'fa-eye')); 
+        icon.forEach(i => i.classList.replace('fa-eye-slash', 'fa-eye')); // Vice-versa with line 58
     }
 }
 /*********************************************************************************************************** */
-// Creating a class for user accounts
+// Creating a Class for UserAccount
+
 class UserAccount{
-    constructor(username, password){
+    constructor(username, password){    
         this.username = username;
-        this.password = password;
-    }
+        this.password = password;}
 
-    // Generating salt for hashing
     static generateSalt(){
-        return crypto.getRandomValues(new Uint8Array(16));
+        return CryptoJS.lib.WordArray.random(128/28).toString();
     }
 
-
-    static arrayBufferToBase64(buffer){
-        return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    static hashPassword(password, salt){
+        return CryptoJS.SHA256(password + salt).toString();
     }
 
-
-    static base64ToArrayBuffer(base64){
-        const binaryString = atob(base64);
-        return Uint8Array.from(binaryString, (char) => char.charCodeAt(0));
-    }
-
-
-    static async hashInput(input, salt){
-        const encoder = new TextEncoder();
-        const data = encoder.encode(input + this.arrayBufferToBase64(salt));
-        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-        return this.arrayBufferToBase64(hashBuffer);
-    }
-
-    // User registration
-    async register() {
+    // Register method
+    register(){
         if(!this.username || !this.password){
-            alert("Please fill in all fields.");
+            alert("Please fill in all fields")
             return false;
         }
 
-        if (localStorage.getItem(this.username)){
-            alert("Username already exists!");
+        if(localStorage.getItem(this.username)){
+            alert("This username already exists!");
             return false;
         }
 
-        if(this.password.length < 8){
-            alert("Password must have at least 8 characters");
+        if (this.password.length < 10){
+            alert("Please create a password with a minimum of 10 characters");
             return false;
         }
-        
-        let salt = UserAccount.generateSalt();
-        let hashedPassword = await UserAccount.hashInput(this.password, salt);
+
+        const salt = UserAccount.generateSalt();
+        const hashedPassword = UserAccount.hashPassword(this.password, salt);
 
         localStorage.setItem(
             this.username,
             JSON.stringify({
                 password: hashedPassword,
-                salt: UserAccount.arrayBufferToBase64(salt),
+                salt : salt,
             })
         );
 
-        alert("Account created successfully!");
+        alert("Account created successfully!")
         return true;
-
     }
 
-    // Login user
-    async login() {
-        let storedUser = JSON.parse(localStorage.getItem(this.username));
+    //Login method
+    login(){
+        const storedUser = JSON.parse(localStorage.getItem(this.username));
 
         if(!storedUser){
             alert("User not found!");
             return false;
         }
 
-        let hashedPassword = await UserAccount.hashInput(this.password, UserAccount.base64ToArrayBuffer(storedUser.salt));
+        const hashedPassword = UserAccount.hashPassword(this.password, storedUser.salt)
 
-        if (hashedPassword === storedUser.password){
+        if(hashedPassword === storedUser.password){
             alert("Login successful!");
             sessionStorage.setItem("loggedInUser", this.username);
             return true;
         } else{
-            alert("Incorrect password!");
+            alert("Incorrect password");
             return false;
         }
     }
 
-    // Logout
+    // Logout method
     static logout(){
         sessionStorage.removeItem("loggedInUser");
-        alert("Logged out successfully!");
+        alert("You have logged out successfully");
+        showFrontPage();
     }
 
-    static isLoggedIn(){
-        return sessionStorage.getItem("loggedInUser") !==null;
+    //Check if the user is still logged in
+    static CheckifUserisLoggedIn(){
+        return sessionStorage.getItem("loggedInUser") !=null;
     }
 }
 
-// Registering and Logging in a user
-document.getElementById("sign-in-button").addEventListener("click", async () => {
-    let username = document.getElementById("username2").value;
-    let password = document.getElementById("pwd2").value;
-
-    let user = new UserAccount(username, password);
-    let success = await user.register();
-
-    if(success){
-        showLoginPage();
-    }
-
-});
-
-
-document.getElementById("login-button2").addEventListener("click", async() => {
+// Function for UserLogin
+function LoginUser(){
     let username = document.getElementById("username").value;
     let password = document.getElementById("pwd").value;
 
-    console.log("Attempting login for: ", username);
+    if (!username || !password){
+        alert("Please fill in all fields.");
+        return;
+    }
 
     let user = new UserAccount(username, password);
-    let success = await user.login();
+    console.log("Attempting login for:", username);
 
-    if (success){
+    if (user.login()){
+        passwordManager = new PasswordManager(password);
+        passwordManager.loadPasswords();
+        alert("Login successful!");
+        sessionStorage.setItem("loggedInUser", username);
         document.getElementById("front-page-header").innerText = `Welcome, ${username}`;
-        document.getElementById("user-name").innetText = username;
-        showMainMenuPage();
+        document.getElementById("user-name").innerText = username;
+        showMainMenuPage(); 
+    } else {
+        alert("Login failed. Please check your credentials again.");
+    }
+}
+
+// Function for Registration
+function SignInUser(){
+    let username = document.getElementById("username2").value;
+    let password = document.getElementById("pwd2").value;
+
+    if(!username || !password){
+        alert("Please fill in all fields.");
+        return;
     }
 
-});
+    let user = new UserAccount (username, password);
 
-window.addEventListener("DOMContentLoaded", () => {
-    const loggedInUser = sessionStorage.getItem("loggedInUser");
-    if(loggedInUser) {
-        document.getElementById("front-page-header").innerText = `Welcome, ${loggedInUser}`;
-        document.getElementById("user-name").innerText = loggedInUser;
-        showMainMenuPage();
+    if(user.register()){
+        alert("Sign-in successful");
+        showLoginPage();
+    } else{
+        alert("Sign-in failed. Username already exists");
     }
-});
+}
 
-// Logging out functionality
-
-function logoutUser(){
-    
+// Function for logging out
+function LogOutUser(){
     UserAccount.logout();
-
-    document.getElementById("front-page-header").innerText = "Welcome User";
+    document.getElementById("front-page-header").innerText = "Welcome, User";
     document.getElementById("user-name").innerText = "User";
 
     showFrontPage();
+    alert("You have been logged out successfully.");
+
 }
 
 /* Password Storage */
 
-//Password Entry class
+// Password Entry class
 class PasswordEntry{
     constructor(id, website, username, password, notes =""){
         this.id = id;
@@ -251,137 +243,152 @@ class PasswordEntry{
     }
 }
 
+// Encryption and Decryption using CryptoJS
+// Generating iv
 class PasswordManager{
-    constructor(masterKey) {
+    constructor(masterKey){
         this.masterKey = masterKey;
         this.passwords = [];
     }
 
-    
     static generateId() {
         return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
     }
 
-    // Encryption useing AES-256
-    async encrypt(data){
-        const encoder = new TextEncoder();
-        const salt = UserAccount.generateSalt();
+    static generateSalt(){
+        return CryptoJS.lib.WordArray.random(128/8).toString();
+    }
 
-        // Deriving a key from master key
-        const keyMaterial = await crypto.subtle.importKey(
-            "raw",
-            encoder.encode(this.masterKey),
-            { name: "PBKDF2" },
-            false,
-            ["deriveKey"]
-        );
+    // Encrypt data
+    encrypt(data){
+        if(!this.masterKey){
+            console.error("Master key is not initialized");
+            throw new Error("Master key is not initialized");
+        }
+        const salt = PasswordManager.generateSalt();
+        const iv = CryptoJS.lib.WordArray.random(128/8);
+        
+        const key = CryptoJS.PBKDF2(this.masterKey, salt, {
+        keySize: 256 / 32,
+        iterations: 1000,
+    });
 
-        const cryptoKey = await crypto.subtle.deriveKey(
-        {
-            name: "PBKDF2",
-            salt: salt,
-            iterations: 100000,
-            hash: "SHA-256"
-        },
-        keyMaterial,
-        { name: "AES-CBC", length: 256},
-        false,
-        ["encrypt"]
-        );
-
-        // Generating initlisation vector
-        const iv = crypto.getRandomValues(new Uint8Array(16));
-
-        const encryptedContent = await crypto.subtle.encrypt(
-            { name: "AES-CBC", iv: iv},
-            cryptoKey,
-            encoder.encode(JSON.stringify(data))
-
-        );
+        const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), key, {
+            iv: iv,
+        });
 
         return {
-            encryptedData: UserAccount.arrayBufferToBase64(encryptedContent),
-            iv: UserAccount.arrayBufferToBase64(iv),
-            salt: UserAccount.arrayBufferToBase64(salt)
+            encryptedData: encrypted.toString(),
+            iv: iv.toString(CryptoJS.enc.Hex),
+            salt: salt,
         };
     }
 
-    // Decryption using AES-256
-    async decrypt(encryptedObj){
-        const encoder = new TextEncoder();
+    // Decryption using AES
+    decrypt(encryptedObj){
+        const { encryptedData, iv, salt } = encryptedObj;
 
-    const encryptedData = UserAccount.base64ToArrayBuffer(encryptedObj.encryptedData);
-    const iv = UserAccount.base64ToArrayBuffer(encryptedObj.iv);
-    const salt = UserAccount.base64ToArrayBuffer(encryptedObj.salt);
+        const key = CryptoJS.PBKDF2(this.masterKey, salt, {
+            keySize: 256 / 32,
+            iterations: 1000,
 
-    // Derive same key used for encryption
-    const keyMaterial = await crypto.subtle.importKey(
-        "raw",
-        encoder.encode(this.masterKey),
-        { name: "PBKDF2" },
-        false,
-        ["deriveKey"]
-    );
+        });
 
-    const cryptoKey = await crypto.subtle.deriveKey(
+        const decrypted = CryptoJS.AES.decrypt(
+            encryptedData, key, {
+            iv: CryptoJS.enc.Hex.parse(iv),
+        });
 
-        {
-            name: "PBKDF2",
-            salt: salt,
-            iterations: 100000,
-            hash: "SHA-256"
-        },
-        keyMaterial,
-        { name: "AES-CBC", length: 256},
-        false,
-        ["decrypt"]
-    );
-
-    const decryptedContent = await crypto.subtle.decrypt(
-        { name: "AES-CBC", iv: iv },
-        cryptoKey,
-        encryptedData
-    );
-
-    return JSON.parse(new TextDecoder().decode(decryptedContent));
+        return JSON.parse(decrypted.toString(CryptoJS.enc.Utf8));
     }
-
-    // Loading passwords method
-    async loadPasswords() {
-        const username = sessionStorage.getItem("loggedInUser");
-        if(!username) return false;
+    // Load passwords method
+    loadPasswords(){
+        const username = sessionStorage.getItem("loggedInUser")
+        if(!username){
+            console.log("No logged in user found")
+            return false;
+        }
 
         const passwordsKey = `${username}_passwords`;
         const encryptedData = localStorage.getItem(passwordsKey);
 
         if(!encryptedData){
-            this.passwords = [];
-            return true;
+
+            const testData = {validation: "valid" };
+            try {
+                const encryptedTest = this.encrypt(testData);
+                localStorage.setItem(`${username}_validation`, JSON.stringify(encryptedTest));
+                this.passwords = [];
+                return true;
+            } catch(error){
+                console.error("Failed to initialize password validation, error");
+                return false;
+            }
+            
         }
 
-        try{
-            this.passwords = await this.decrypt(JSON.parse(encryptedData));
+        const validationData = localStorage.getItem(`${username}_validation`);
+        if (validationData){
+            try{
+                const decryptedValidation = this.decrypt(JSON.parse(validationData));
+
+                if (!decryptedValidation || decryptedValidation.validation !== "valid"){
+                    console.log("Invalid master password");
+                    return false;
+                }
+
+            } catch (error){
+                console.log("Failed to decrypt validation data - incorrect password");
+                return false;
+            }
+        }
+
+        
+        try {
+        const decryptedPasswords = this.decrypt(JSON.parse(encryptedData));
+
+            if (decryptedPasswords){
+            this.passwords = decryptedPasswords;
+            alert("You've successfully opened your password storage");
             return true;
+        }    else {
+            console.log("Failed to decrypt passwords");
+            this.passwords = [];
+            return false;
+        } 
+        }  catch(error){
+        console.log("Failed to decrypt passwords");
+        this.passwords = [];
+        return false;
+    }
+
+    }
+
+    savePasswords(){
+        const username = sessionStorage.getItem("loggedInUser")
+        if(!username){
+            console.log("No logged in user found");
+            return false;
+        }
+
+        if (!this.passwords || this.passwords.length === 0){
+            console.warn("No passwords to save.");
+            return false;
+        }
+
+        const passwordsKey = `${username}_passwords`;
+
+        try{
+        const encryptedData = this.encrypt(this.passwords);
+        localStorage.setItem(passwordsKey, JSON.stringify(encryptedData));
+        return true;
         } catch (error){
-            console.error("Failed to decrypt passwords:", error);
+            console.error("Failed to save passwords:", error);
             return false;
         }
     }
 
-    // Save passwords to localStorage
-    async savePasswords(){
-        const username = sessionStorage.getItem("loggedInUser");
-        if(!username) return false;
-
-        const passwordsKey = `${username}_passwords`;
-        const encryptedData = await this.encrypt(this.passwords);
-
-        localStorage.setItem(passwordsKey, JSON.stringify(encryptedData));
-        return true;
-    }
-
-    // Add a new password method
-     addPassword(website, username, password, notes =""){
+    addPassword(website, username, password, notes =""){
         const newEntry = new PasswordEntry(
             PasswordManager.generateId(),
             website,
@@ -391,8 +398,7 @@ class PasswordManager{
         );
 
         this.passwords.push(newEntry);
-        this.savePasswords();
-        return newEntry;
+        return this.savePasswords() ? newEntry : null
     }
 
     getPasswordById(id) {
@@ -403,10 +409,25 @@ class PasswordManager{
         return this.passwords;
     }
 
-    //Update Password method
-    async updatePassword(id, updates){
+    //Update passwords method
+    updatePasswords(id, updates){
+
+        if(!id || typeof id !== "string"){
+            console.error("Invalid id provided for updating passwords");
+            return false;
+        }
+
+
         const index = this.passwords.findIndex(entry => entry.id === id);
-        if (index === - 1) return false;
+        if(index === -1){
+            console.error(`No password entry found with id: ${id}`);
+            return false;
+        }
+
+        if(!updates || typeof updates !=="object"){
+            console.error("Invalid updates object provided");
+            return false;
+        }
 
         this.passwords[index] = {
             ...this.passwords[index],
@@ -414,72 +435,74 @@ class PasswordManager{
             dateModified: new Date().toISOString()
         };
 
-        await this.savePasswords();
-        return true;
+        return this.savePasswords();
     }
-
-    // Delete Password  method
-
-    async deletePassword(id) {
+    // Delete Passwords
+    deletePassword(id){
+        if(!id){
+            console.error("No id provided for deletion");
+            return false;
+        }
         const initialLength = this.passwords.length;
         this.passwords = this.passwords.filter(entry => entry.id !== id);
 
         if(this.passwords.length < initialLength){
-            await this.savePasswords();
-            return true;
+            return this.savePasswords();
         }
 
+        console.warn(`No passwords with id ${id} found to delete`);
         return false;
+
     }
+
+
 
 }
 
 let passwordManager;
 
-// Function to show the password storage page
-function showPasswordStoragePage() {
-    if (UserAccount.isLoggedIn()) {
-        displayPage.showPage('passwordStoragePage');
-        loadAndDisplayPasswords();
-    } else {
-        alert("Please log in to access your passwords.");
-        showLoginPage();
-    }
-}
-
-// Initialize the password manager after successful login
-document.getElementById("login-button2").addEventListener("click", async () => {
+// Function to initialise password manager after successful login
+function initialise(){
     let username = document.getElementById("username").value;
     let password = document.getElementById("pwd").value;
 
     let user = new UserAccount(username, password);
-    let success = await user.login();
 
-    if (success) {
+    if(user.login()){
         document.getElementById("front-page-header").innerText = `Welcome, ${username}`;
         document.getElementById("user-name").innerText = username;
-        
-        // Initialize password manager with user's password as master key
-        passwordManager = new PasswordManager(password);
-        await passwordManager.loadPasswords();
-        
-        showMainMenuPage();
-    }
-});
 
-// Load and display passwords
-async function loadAndDisplayPasswords() {
-    if (!passwordManager) {
-        const password = prompt("Please enter your password to decrypt your passwords:");
         passwordManager = new PasswordManager(password);
-        const success = await passwordManager.loadPasswords();
+        passwordManager.loadPasswords();
+        showMainMenuPage();
+        return true;
+    } else{
+        console.log("Failed to login")
+        return false;
+    }
+}
+
+// Function to load and display passwords
+function loadAndDisplayPasswords(){
+    if(!passwordManager){
+
+        const password = prompt("Please enter your password to view your password storage");
+        if(!password){
+            alert('Failed to unlock password storage')
+            passwordManager = new PasswordManager(password);
+            return;
+        } 
         
-        if (!success) {
-            alert("Failed to decrypt passwords. Please try again.");
+        
+          const success = passwordManager.loadPasswords();
+
+        
+        if(!success) {
+            alert('Failed to unlock password storage');
             return;
         }
     }
-    
+
     const passwordsList = document.getElementById("passwords-list");
     passwordsList.innerHTML = "";
     
@@ -520,55 +543,57 @@ async function loadAndDisplayPasswords() {
     });
 }
 
-// Add a new password
-async function addNewPassword() {
+// Function to add a new Password
+function addNewPassword(){
     const website = document.getElementById("new-website").value;
     const username = document.getElementById("new-username").value;
     const password = document.getElementById("new-password-value").value;
     const notes = document.getElementById("new-notes").value;
-    
-    if (!website || !username || !password) {
-        alert("Please fill in all required fields.");
+
+    if(!website || !username || !password || !notes){
+        alert("Please fill in all the fields");
         return;
+    } 
+
+    if(!passwordManager){
+        alert("Password Manager is not initialized. Please log in again");
+        showLoginPage;
     }
-    
-    await passwordManager.addPassword(website, username, password, notes);
-    
-    // Clear the form
+
+    try{passwordManager.addPassword(website, username, password, notes);
+        alert("Password added successfully!");
     document.getElementById("new-website").value = "";
     document.getElementById("new-username").value = "";
     document.getElementById("new-password-value").value = "";
     document.getElementById("new-notes").value = "";
-    
-    // Hide the form
     document.getElementById("add-password-form").style.display = "none";
-    
-    // Reload the passwords
     loadAndDisplayPasswords();
+    } catch(error){
+        console.error("Error adding password: ", error);
+        alert("Error occured while adding the password. Please try again.");
+    }
+
+
 }
 
-// View password
+// Function to view passwords
 function viewPassword(id) {
     const entry = passwordManager.getPasswordById(id);
     if (!entry) return;
     
-    // Find the password element for this entry
     const entryElement = document.querySelector(`.password-entry[data-id="${id}"]`);
     const passwordElement = entryElement.querySelector("p:nth-child(3)");
     
-    // Toggle password visibility
+
     if (passwordElement.innerHTML.includes("********")) {
         passwordElement.innerHTML = `<strong>Password:</strong> ${entry.password}`;
-        // Change the eye icon
         entryElement.querySelector(".view-btn i").classList.replace("fa-eye", "fa-eye-slash");
     } else {
         passwordElement.innerHTML = `<strong>Password:</strong> ********`;
-        // Change the eye icon back
         entryElement.querySelector(".view-btn i").classList.replace("fa-eye-slash", "fa-eye");
     }
 }
-
-// Edit password
+// Function to edit passwords
 function editPassword(id) {
     const entry = passwordManager.getPasswordById(id);
     if (!entry) return;
@@ -584,34 +609,40 @@ function editPassword(id) {
     document.getElementById("edit-password-form").style.display = "block";
 }
 
-// Save edited password
-async function saveEditedPassword() {
+// Function to save edited password
+function saveEditedPassword(){
     const id = document.getElementById("edit-id").value;
     const website = document.getElementById("edit-website").value;
     const username = document.getElementById("edit-username").value;
     const password = document.getElementById("edit-password-value").value;
     const notes = document.getElementById("edit-notes").value;
-    
+
     if (!website || !username || !password) {
         alert("Please fill in all required fields.");
         return;
     }
-    
-    await passwordManager.updatePassword(id, { website, username, password, notes });
-    
-    // Hide the form
-    document.getElementById("edit-password-form").style.display = "none";
-    
-    // Reload the passwords
-    loadAndDisplayPasswords();
+
+    try{
+        passwordManager.updatePasswords( id, { website, username, password, notes});
+        document.getElementById("edit-password-form").style.display = "none";
+        loadAndDisplayPasswords();
+    } catch (error){
+        console.log("Failed to save password", error);
+        alert("An error occured while adding the password. Try again");
+    }
 }
 
-// Delete password
-async function deletePassword(id) {
-    if (confirm("Are you sure you want to delete this password?")) {
-        await passwordManager.deletePassword(id);
-        loadAndDisplayPasswords();
+function deletePassword(id){
+    if(!id){
+        console.log("No id selected for deletion.")
+        return false;
+    } else{
+        if(confirm("Are you sure you want to delete?")){
+            passwordManager.deletePassword(id);
+            loadAndDisplayPasswords();
+        }
     }
+
 }
 
 // Generate a random password
@@ -632,3 +663,7 @@ function generatePassword(targetId) {
     const password = generateRandomPassword();
     document.getElementById(targetId).value = password;
 }
+
+
+
+

@@ -268,7 +268,7 @@ html{
     gap: 20px; 
 }
 
-#sign-in-uname, #sign-in-password, .secret-question { 
+#sign-in-uname, #sign-in-password{ 
     display: flex;
     align-items: center;
     gap: 8px;
@@ -282,29 +282,11 @@ html{
     cursor: help;
 }
 
-.secret-question {
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.secret-question p1 {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-}
-
-#secret-question-pwd {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    gap: 8px;
-}
-
-#sign-in-password label, #sign-in-uname label, #secret-question-pwd label {
+#sign-in-password label, #sign-in-uname label{
     min-width: 180px; 
 }
 
-#sign-in-password input, #sign-in-uname input, #secret-question-pwd input {
+#sign-in-password input, #sign-in-uname input {
     flex: 1; 
     padding: 8px;
     border: 1px solid #ccc;
@@ -330,127 +312,6 @@ html{
 #sign-in-button, #cancel2 {
     min-width: 120px;
     padding: 10px 20px;
-}
-
-/* The Password-Reset Page */
-.forgot-password-class {
-    margin-top: 60px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.fpp-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 60px; 
-    border-bottom: solid 2px black; 
-    background-color: white; 
-    padding: 0 20px; 
-    position: fixed; 
-    top: 0;
-    left: 0;
-    z-index: 1000;
-}
-
-.fpp-content1 {
-    display: flex; 
-    flex-direction: column;
-    width: 80%; 
-    max-width: 600px; 
-    margin: 15px auto; 
-    padding: 20px;
-    background-color: #f8f8f8; 
-    border: 2px solid #ccc; 
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    gap: 20px; 
-}
-
-.fpp-content1 p1 {
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-#uname-veritas, #sq-veritas {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-#uname-veritas label, #sq-veritas label {
-    min-width: 180px;
-}
-
-#uname-veritas input, #sq-veritas input {
-    flex: 1; 
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-#veritas-button {
-    padding: 8px 15px;
-    margin-left: 10px;
-}
-
-#password-reset-section {
-    display: flex; 
-    flex-direction: column;
-    width: 80%; 
-    max-width: 600px; 
-    margin: 15px auto; 
-    padding: 20px;
-    background-color: #f8f8f8; 
-    border: 2px solid #ccc; 
-    border-radius: 10px;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    gap: 20px; 
-    align-items: center;
-}
-
-#password-reset-section label {
-    min-width: 120px;
-    margin-right: 10px;
-}
-
-#password-reset-section input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
-    max-width: 250px;
-}
-
-#reset-password-button, #password-reset-section button:last-child {
-    padding: 10px 20px;
-    min-width: 120px;
-    margin: 5px;
-}
-
-#password-reset-section div {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    justify-content: center;
-    gap: 8px;
-}
-
-.pwd-revl {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-}
-
-
-.button-style:hover {
-    background-color: #e8e8e8;
 }
 /* Main Menu tingz*/
 #main-menu-header{
@@ -586,18 +447,26 @@ html{
 }
 
 /* For the password storage page*/
-.search-container {
-    margin-bottom: 20px;
-    display: flex;
-    gap: 10px;
+
+#password-storage-page{
+padding-top: 60px;
 }
 
-.search-container input {
-    flex: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+#psp-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 60px; 
+    border-bottom: solid 2px black; 
+    background-color: white; 
+    padding: 0 20px; 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    z-index: 1000; 
 }
+
 
 .add-password-container {
     margin-bottom: 20px;
